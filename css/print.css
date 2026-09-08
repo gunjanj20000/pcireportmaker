@@ -1,22 +1,49 @@
-/* PCI Report Maker - Pixel Perfect Print Stylesheet */
+/* PCI Report Maker - Strict Single-Page A4 Print & PDF Stylesheet */
+
+/* Class applied during Mobile PDF Generation to lock 1:1 A4 sheet geometry */
+.paper-sheet.force-single-page-export {
+  width: 210mm !important;
+  height: 295mm !important;
+  max-height: 295mm !important;
+  padding: 10mm 14mm !important;
+  margin: 0 auto !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  font-family: "Times New Roman", Times, Georgia, serif !important;
+}
+
+.paper-sheet.force-single-page-export .performa-header-center h1 {
+  font-size: 19pt !important;
+}
+
+.paper-sheet.force-single-page-export .performa-grid,
+.paper-sheet.force-single-page-export .performa-row,
+.paper-sheet.force-single-page-export .performa-sub-row {
+  font-size: 10pt !important;
+}
 
 @media print {
-  /* Hide UI framework controls */
-  body {
-    background: none !important;
-    background-color: #ffffff !important;
+  html, body {
+    width: 210mm !important;
+    height: 297mm !important;
+    background: #ffffff !important;
     padding: 0 !important;
     margin: 0 !important;
     color: #000000 !important;
-    font-size: 10pt;
+    font-size: 10pt !important;
+    overflow: hidden !important;
   }
 
+  /* Hide all non-printable UI components */
   .navbar,
   .form-panel,
   .nav-actions,
   .preset-pills,
   .modal-overlay,
-  .no-print {
+  .no-print,
+  .view-tabs-bar,
+  .sticky-header-container {
     display: none !important;
   }
 
@@ -31,29 +58,36 @@
   .preview-panel {
     background: none !important;
     padding: 0 !important;
+    margin: 0 !important;
     height: auto !important;
     overflow: visible !important;
+    display: block !important;
   }
 
-  /* Paper sheet sizing for print */
+  /* Strict Single-Page A4 Fitting */
   .paper-sheet {
     box-shadow: none !important;
     width: 100% !important;
     max-width: 100% !important;
-    min-height: auto !important;
     height: 100% !important;
+    max-height: 290mm !important;
     padding: 0 !important;
     margin: 0 !important;
-    page-break-after: avoid;
-    page-break-inside: avoid;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-after: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
   }
 
   @page {
     size: A4 portrait;
-    margin: 10mm 15mm 10mm 15mm;
+    margin: 8mm 12mm 8mm 12mm;
   }
 
-  /* Ensure text & lines print black */
+  /* Force exact black printing */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
