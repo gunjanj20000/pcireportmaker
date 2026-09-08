@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pci-report-v1';
+const CACHE_NAME = 'pci-report-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -15,13 +15,38 @@ const ASSETS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'
 ];
 
+/**
+ * Helper to strip redirection status from a Response object.
+ * Browsers throw an error when a Service Worker serves a response with response.redirected === true.
+ */
+function cleanResponse(response) {
+  if (!response || !response.redirected) {
+    return response;
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers
+  });
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(CACHE_NAME).then(async (cache) => {
       console.log('[ServiceWorker] Pre-caching offline assets');
-      return cache.addAll(ASSETS_TO_CACHE).catch(err => {
-        console.warn('[ServiceWorker] Cache addAll warning:', err);
-      });
+      await Promise.all(
+        ASSETS_TO_CACHE.map(async (url) => {
+          try {
+            const response = await fetch(url);
+            if (response.ok) {
+              const clean = cleanResponse(response);
+              await cache.put(url, clean);
+            }
+          } catch (err) {
+            console.warn('[ServiceWorker] Failed to pre-cache asset:', url, err);
+          }
+        })
+      );
     })
   );
   self.skipWaiting();
@@ -44,26 +69,36 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Only intercept GET requests
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      if (response) {
-        return response; // Return from cache
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cleanResponse(cachedResponse);
       }
       return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+        if (!networkResponse || (networkResponse.status !== 200 && networkResponse.type !== 'opaque')) {
           return networkResponse;
         }
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-        return networkResponse;
+
+        const responseToReturn = cleanResponse(networkResponse);
+
+        if (networkResponse.type === 'basic' || networkResponse.type === 'cors') {
+          const responseToCache = responseToReturn.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+
+        return responseToReturn;
       }).catch(() => {
         // Offline fallback if fetch fails
-        if (event.request.headers.get('accept').includes('text/html')) {
-          return caches.match('./index.html');
+        if (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) {
+          return caches.match('./index.html').then(res => res ? cleanResponse(res) : undefined);
         }
       });
     })
   );
 });
+
