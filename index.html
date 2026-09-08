@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>pcireport</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#005a36">
+  <meta name="description" content="PWA Percutaneous Coronary Intervention Report Generator for CKS Hospitals">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/print.css" media="print">
+
+  <!-- HTML2PDF CDN for Save as PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- App Navbar Header -->
+  <header class="navbar no-print">
+    <div class="navbar-brand">
+      <svg viewBox="0 0 450 140" width="120" height="34">
+        <path d="M 40,15 L 75,15 L 75,40 L 40,40 Z" fill="#ffffff"/>
+        <path d="M 15,40 L 40,40 L 40,75 L 15,75 Z" fill="#ffffff"/>
+        <path d="M 40,75 L 75,75 L 75,115 L 40,115 Z" fill="#ffffff"/>
+        <path d="M 75,40 L 115,40 L 115,75 L 75,75 Z" fill="#ffffff"/>
+        <text x="125" y="70" font-family="Times New Roman, serif" font-size="52" font-weight="900" fill="#ffffff">CKS</text>
+        <text x="126" y="95" font-family="Times New Roman, serif" font-size="22" font-weight="bold" fill="#ffffff">HOSPITALS</text>
+      </svg>
+      <span>pcireport</span>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn btn-primary" onclick="window.print()">
+        🖨️ Print Report
+      </button>
+      <button class="btn btn-accent" id="btn-save-pdf" onclick="generatePDF()">
+        📥 Save as PDF
+      </button>
+      <button class="btn btn-outline" onclick="saveReportToHistory()">
+        💾 Save Draft
+      </button>
+      <button class="btn btn-outline" onclick="toggleHistoryModal(true)">
+        📋 Reports
+      </button>
+      <button class="btn btn-secondary" onclick="fillDemoData()">
+        ⚡ Demo
+      </button>
+      <button class="btn btn-outline" onclick="clearForm()">
+        🗑️ Clear
+      </button>
+      <button class="btn btn-primary" id="btn-pwa-install" style="display: none;">
+        📲 Install App
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile & Tablet View Toggle Switcher Bar -->
+  <div class="view-tabs-bar no-print">
+    <div class="tab-switch-group">
+      <button class="tab-btn active" id="tab-btn-editor" onclick="switchMobileView('show-editor')">
+        📝 Form Cards
+      </button>
+      <button class="tab-btn" id="tab-btn-preview" onclick="switchMobileView('show-preview')">
+        📄 View Performa
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Grid Layout -->
+  <div class="app-container show-editor" id="app-container">
+    
+    <!-- LEFT PANEL: Dropdown Buttons & Custom Entry Mobile Cards -->
+    <div class="form-panel no-print">
+      
+      <!-- Card 1: Patient Demographics -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">1. Patient Demographics</span>
+          <span class="step-badge">Card 1 of 6</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <div class="label-row">
+              <label for="field-name">Patient Name</label>
+            </div>
+            <input type="text" id="field-name" placeholder="Type Patient Name (e.g. RAMESH KUMAR SHARMA)">
+          </div>
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-age">Age</label>
+            </div>
+            <input type="text" id="field-age" placeholder="e.g. 58 Y">
+          </div>
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-sex">Sex</label>
+            </div>
+            <select id="field-sex">
+              <option value="">-- Select Sex --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-regNo">Reg. No. (IPD/OPD)</label>
+            </div>
+            <input type="text" id="field-regNo" placeholder="e.g. IPD-88421">
+          </div>
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-cathNo">Cath No.</label>
+            </div>
+            <input type="text" id="field-cathNo" placeholder="e.g. CATH-2026-104">
+          </div>
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-date">Date</label>
+            </div>
+            <input type="date" id="field-date">
+          </div>
+          <div class="form-group full-width">
+            <div class="label-row">
+              <label for="field-address">Address</label>
+              <button type="button" class="btn-add-custom" onclick="promptAddCustom('addresses', 'field-address', 'Address')">➕ Custom</button>
+            </div>
+            <select class="dropdown-select" data-category="addresses" data-target="field-address"></select>
+            <input type="text" id="field-address" placeholder="Select or type custom Address">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Clinical Details -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">2. Operator & Indication</span>
+          <span class="step-badge">Card 2 of 6</span>
+        </div>
+        <div class="form-group full-width" style="margin-bottom: 0.75rem;">
+          <div class="label-row">
+            <label for="field-operator">Operator</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('operators', 'field-operator', 'Operator')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="operators" data-target="field-operator"></select>
+          <input type="text" id="field-operator" placeholder="Select or type custom Operator">
+        </div>
+
+        <div class="form-group full-width">
+          <div class="label-row">
+            <label for="field-indication">Indication</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('indications', 'field-indication', 'Indication')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="indications" data-target="field-indication"></select>
+          <input type="text" id="field-indication" placeholder="Select or type custom Indication">
+        </div>
+      </div>
+
+      <!-- Card 3: Angiography Profile -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">3. Angiography Profile</span>
+          <span class="step-badge">Card 3 of 6</span>
+        </div>
+        
+        <div class="form-group full-width" style="margin-bottom: 0.5rem;">
+          <div class="label-row">
+            <label for="field-lesion1">Lesion 1</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('lesions', 'field-lesion1', 'Lesion 1')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="lesions" data-target="field-lesion1"></select>
+          <input type="text" id="field-lesion1" placeholder="Select or type custom Lesion 1">
+        </div>
+
+        <div class="form-group full-width" style="margin-bottom: 0.5rem;">
+          <div class="label-row">
+            <label for="field-lesion2">Lesion 2</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('lesions', 'field-lesion2', 'Lesion 2')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="lesions" data-target="field-lesion2"></select>
+          <input type="text" id="field-lesion2" placeholder="Select or type custom Lesion 2">
+        </div>
+
+        <div class="form-group full-width" style="margin-bottom: 0.75rem;">
+          <div class="label-row">
+            <label for="field-lesion3">Lesion 3</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('lesions', 'field-lesion3', 'Lesion 3')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="lesions" data-target="field-lesion3"></select>
+          <input type="text" id="field-lesion3" placeholder="Select or type custom Lesion 3">
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <div class="label-row">
+              <label for="field-route">Route</label>
+              <button type="button" class="btn-add-custom" onclick="promptAddCustom('routes', 'field-route', 'Route')">➕ Custom</button>
+            </div>
+            <select class="dropdown-select" data-category="routes" data-target="field-route"></select>
+            <input type="text" id="field-route" placeholder="Select or type custom Route">
+          </div>
+          
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-aorticPressure">Aortic Pressure</label>
+              <button type="button" class="btn-add-custom" onclick="promptAddCustom('aorticPressures', 'field-aorticPressure', 'Aortic Pressure')">➕ Custom</button>
+            </div>
+            <select class="dropdown-select" data-category="aorticPressures" data-target="field-aorticPressure"></select>
+            <input type="text" id="field-aorticPressure" placeholder="e.g. 120/80 mmHg">
+          </div>
+
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-contrast">Contrast</label>
+              <button type="button" class="btn-add-custom" onclick="promptAddCustom('contrasts', 'field-contrast', 'Contrast')">➕ Custom</button>
+            </div>
+            <select class="dropdown-select" data-category="contrasts" data-target="field-contrast"></select>
+            <input type="text" id="field-contrast" placeholder="e.g. Omnipaque 350 (80 ml)">
+          </div>
+
+          <div class="form-group full-width">
+            <div class="label-row">
+              <label for="field-gp2b3a">Gp 2b/3a Inhibitor</label>
+              <button type="button" class="btn-add-custom" onclick="promptAddCustom('gp2b3aInhibitors', 'field-gp2b3a', 'Gp 2b/3a Inhibitor')">➕ Custom</button>
+            </div>
+            <select class="dropdown-select" data-category="gp2b3aInhibitors" data-target="field-gp2b3a"></select>
+            <input type="text" id="field-gp2b3a" placeholder="Select or type custom Gp 2b/3a Inhibitor">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Hardware Used -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">4. Hardware Used</span>
+          <span class="step-badge">Card 4 of 6</span>
+        </div>
+        
+        <div class="form-group full-width" style="margin-bottom: 0.5rem;">
+          <div class="label-row">
+            <label for="field-guidingCatheter">Guiding Catheter</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('guidingCatheters', 'field-guidingCatheter', 'Guiding Catheter')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="guidingCatheters" data-target="field-guidingCatheter"></select>
+          <input type="text" id="field-guidingCatheter" placeholder="Select or type custom Guiding Catheter">
+        </div>
+
+        <div class="form-group full-width" style="margin-bottom: 0.5rem;">
+          <div class="label-row">
+            <label for="field-guideWire">Guide Wire Used</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('guideWires', 'field-guideWire', 'Guide Wire')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="guideWires" data-target="field-guideWire"></select>
+          <input type="text" id="field-guideWire" placeholder="Select or type custom Guide Wire">
+        </div>
+
+        <div class="form-group full-width" style="margin-bottom: 0.5rem;">
+          <div class="label-row">
+            <label for="field-preDilatation">Pre Dilatation</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('preDilatations', 'field-preDilatation', 'Pre Dilatation')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="preDilatations" data-target="field-preDilatation"></select>
+          <input type="text" id="field-preDilatation" placeholder="Select or type custom Pre Dilatation">
+        </div>
+
+        <div class="form-group full-width" style="margin-bottom: 0.5rem;">
+          <div class="label-row">
+            <label for="field-stent">Stent</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('stents', 'field-stent', 'Stent')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="stents" data-target="field-stent"></select>
+          <input type="text" id="field-stent" placeholder="Select or type custom Stent">
+        </div>
+
+        <div class="form-group full-width">
+          <div class="label-row">
+            <label for="field-postDilatation">Post Stent Dilatation</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('postDilatations', 'field-postDilatation', 'Post Stent Dilatation')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="postDilatations" data-target="field-postDilatation"></select>
+          <input type="text" id="field-postDilatation" placeholder="Select or type custom Post Stent Dilatation">
+        </div>
+      </div>
+
+      <!-- Card 5: Outcomes & Advise -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">5. Outcomes & Advise</span>
+          <span class="step-badge">Card 5 of 6</span>
+        </div>
+        
+        <div class="form-group full-width" style="margin-bottom: 0.5rem;">
+          <div class="label-row">
+            <label for="field-endResult">End Result</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('endResults', 'field-endResult', 'End Result')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="endResults" data-target="field-endResult"></select>
+          <input type="text" id="field-endResult" placeholder="Select or type custom End Result">
+        </div>
+
+        <div class="form-group full-width" style="margin-bottom: 0.5rem;">
+          <div class="label-row">
+            <label for="field-conclusion">Conclusion</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('conclusions', 'field-conclusion', 'Conclusion')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="conclusions" data-target="field-conclusion"></select>
+          <input type="text" id="field-conclusion" placeholder="Select or type custom Conclusion">
+        </div>
+
+        <div class="form-group full-width">
+          <div class="label-row">
+            <label for="field-advise">Advise</label>
+            <button type="button" class="btn-add-custom" onclick="promptAddCustom('advises', 'field-advise', 'Advise')">➕ Custom</button>
+          </div>
+          <select class="dropdown-select" data-category="advises" data-target="field-advise"></select>
+          <textarea id="field-advise" rows="4" placeholder="Select advice template or type custom advice..."></textarea>
+        </div>
+      </div>
+
+      <!-- Card 6: Doctors & Signatures -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">6. Doctor Signatures</span>
+          <span class="step-badge">Card 6 of 6</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-doc1">Doctor 1</label>
+              <button type="button" class="btn-add-custom" onclick="promptAddCustom('doctors', 'field-doc1', 'Doctor 1')">➕ Custom</button>
+            </div>
+            <select class="dropdown-select" data-category="doctors" data-target="field-doc1"></select>
+            <input type="text" id="field-doc1" value="Dr. PRAKASH CHANDWANI">
+          </div>
+          
+          <div class="form-group">
+            <div class="label-row">
+              <label for="field-doc2">Doctor 2</label>
+              <button type="button" class="btn-add-custom" onclick="promptAddCustom('doctors', 'field-doc2', 'Doctor 2')">➕ Custom</button>
+            </div>
+            <select class="dropdown-select" data-category="doctors" data-target="field-doc2"></select>
+            <input type="text" id="field-doc2" value="Dr. KUSHAL JANGID">
+          </div>
+
+          <div class="form-group full-width">
+            <div class="label-row">
+              <label for="field-doc3">Doctor 3</label>
+              <button type="button" class="btn-add-custom" onclick="promptAddCustom('doctors', 'field-doc3', 'Doctor 3')">➕ Custom</button>
+            </div>
+            <select class="dropdown-select" data-category="doctors" data-target="field-doc3"></select>
+            <input type="text" id="field-doc3" value="Dr. NITESH PANSARI">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL: 1:1 Pixel Perfect A4 Performa Sheet Preview -->
+    <div class="preview-panel">
+      <div class="paper-sheet" id="report-paper">
+        
+        <div>
+          <!-- Performa Header -->
+          <div class="performa-header">
+            <div class="performa-header-left">
+              <img src="assets/cks-logo.svg" alt="CKS Hospitals Logo">
+            </div>
+            <div class="performa-header-center">
+              <h1>CKS HOSPITALS</h1>
+              <p style="font-weight: bold;">(A Unit of CKS Medicare Pvt. Ltd.)</p>
+              <p>F-98 A, Road No. 6, VKIA, Jaipur</p>
+              <p>Pin Code : 302013, Phone : 0141-3313233</p>
+              <p>Website : www.ckshospitals.com</p>
+              <p>CIN No.: U28939RJ1980PTC002080</p>
+            </div>
+            <div class="performa-header-right">
+              <img src="assets/nabh-logo.svg" alt="NABH Accredited">
+            </div>
+          </div>
+
+          <hr class="performa-divider">
+
+          <!-- Title -->
+          <div class="performa-title">PERCUTANEOUS CORONARY INTERVENTION REPORT</div>
+
+          <!-- Patient Demographics Section -->
+          <div class="performa-grid">
+            <div>
+              <div class="performa-row">
+                <span class="performa-label">Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+                <div class="performa-value" id="preview-name"></div>
+              </div>
+              <div class="performa-row">
+                <span class="performa-label">Reg. No. &nbsp;:</span>
+                <div class="performa-value" id="preview-regNo"></div>
+              </div>
+              <div class="performa-row">
+                <span class="performa-label">Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+                <div class="performa-value" id="preview-date"></div>
+              </div>
+              <div class="performa-row">
+                <span class="performa-label">Address &nbsp;&nbsp;:</span>
+                <div class="performa-value" id="preview-address"></div>
+              </div>
+            </div>
+            <div>
+              <div class="performa-row">
+                <span class="performa-label short">Age &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+                <div class="performa-value" id="preview-age"></div>
+              </div>
+              <div class="performa-row">
+                <span class="performa-label short">Sex &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+                <div class="performa-value" id="preview-sex"></div>
+              </div>
+              <div class="performa-row">
+                <span class="performa-label short">Cath No. :</span>
+                <div class="performa-value" id="preview-cathNo"></div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="performa-divider" style="margin-top: 4px; margin-bottom: 6px;">
+
+          <!-- Operator & Indication -->
+          <div class="performa-row">
+            <span class="performa-label" style="min-width: 110px;">OPERATOR :</span>
+            <div class="performa-value" id="preview-operator"></div>
+          </div>
+          <div class="performa-row">
+            <span class="performa-label" style="min-width: 110px;">INDICATION :</span>
+            <div class="performa-value" id="preview-indication"></div>
+          </div>
+
+          <hr class="performa-divider" style="margin-top: 4px; margin-bottom: 6px;">
+
+          <!-- Angiography Profile -->
+          <div class="performa-section-heading">ANGIOGRAPHY PROFILE :</div>
+          <div class="performa-sub-list">
+            <div class="performa-sub-row">
+              <span class="performa-sub-label indent">Lesion 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+              <div class="performa-value" id="preview-lesion1"></div>
+            </div>
+            <div class="performa-sub-row">
+              <span class="performa-sub-label indent">Lesion 2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+              <div class="performa-value" id="preview-lesion2"></div>
+            </div>
+            <div class="performa-sub-row">
+              <span class="performa-sub-label indent">Lesion 3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+              <div class="performa-value" id="preview-lesion3"></div>
+            </div>
+          </div>
+
+          <hr class="performa-divider" style="margin-top: 4px; margin-bottom: 6px;">
+
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">Route &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-route"></div>
+          </div>
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">Aortic Pressure &nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-aorticPressure"></div>
+          </div>
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">Contrast &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-contrast"></div>
+          </div>
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">Gp 2b/3a Inhibitor :</span>
+            <div class="performa-value" id="preview-gp2b3a"></div>
+          </div>
+
+          <!-- Hardware Used -->
+          <div class="performa-section-heading" style="margin-top: 10px;">HARD WARE USED</div>
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">Guiding Catheter &nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-guidingCatheter"></div>
+          </div>
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">Guide Wire Used &nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-guideWire"></div>
+          </div>
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">Pre Dilatation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-preDilatation"></div>
+          </div>
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">Stent &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-stent"></div>
+          </div>
+          <div class="performa-sub-row" style="margin-bottom: 12px;">
+            <span class="performa-sub-label">Post Stent Dilatation :</span>
+            <div class="performa-value" id="preview-postDilatation"></div>
+          </div>
+
+          <!-- End Result, Conclusion, Advise -->
+          <div class="performa-sub-row">
+            <span class="performa-sub-label">End Result &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-endResult"></div>
+          </div>
+          <div class="performa-sub-row" style="margin-top: 6px;">
+            <span class="performa-sub-label">Conclusion &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-conclusion"></div>
+          </div>
+          <div class="performa-sub-row" style="margin-top: 6px;">
+            <span class="performa-sub-label">Advise &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+            <div class="performa-value" id="preview-advise" style="white-space: pre-wrap; min-height: 40px;"></div>
+          </div>
+        </div>
+
+        <!-- Footer Signatures Section -->
+        <div class="performa-footer">
+          <hr class="performa-divider" style="margin-bottom: 12px;">
+
+          <div class="performa-doctors-row">
+            <div class="doctor-col" id="preview-doc1">Dr. PRAKASH CHANDWANI</div>
+            <div class="doctor-col" id="preview-doc2">Dr. KUSHAL JANGID</div>
+            <div class="doctor-col" id="preview-doc3">Dr. NITESH PANSARI</div>
+          </div>
+
+          <div class="performa-bottom-sign">
+            <div>
+              Name &amp; Signature : <span class="sign-line"></span>
+            </div>
+            <div>
+              Date &amp; Time : <span class="sign-line"></span>
+            </div>
+            <div class="doc-code">
+              CKSH/IPD/PCIR/01
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Saved Reports History Modal -->
+  <div class="modal-overlay" id="history-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="margin: 0; color: var(--primary-color);">Saved PCI Reports</h3>
+        <button class="btn btn-secondary" onclick="toggleHistoryModal(false)">✕ Close</button>
+      </div>
+      <div class="modal-body" id="history-list-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/presets.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/sw-register.js"></script>
+</body>
+</html>

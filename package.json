@@ -1,0 +1,18 @@
+{
+  "name": "pcireport",
+  "version": "1.0.0",
+  "description": "Progressive Web App PCI Report Maker for CKS Hospitals",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node build.js"
+  },
+  "keywords": [
+    "pwa",
+    "pci-report",
+    "cath-lab",
+    "cks-hospitals"
+  ],
+  "author": "",
+  "license": "ISC"
+}

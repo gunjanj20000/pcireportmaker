@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 140" width="450" height="140">
+  <g id="cks-logo-icon">
+    <!-- Plus symbol background / arms -->
+    <path d="M 40,15 L 75,15 L 75,40 L 40,40 Z" fill="#005A36"/>
+    <path d="M 15,40 L 40,40 L 40,75 L 15,75 Z" fill="#005A36"/>
+    <path d="M 40,75 L 75,75 L 75,115 L 40,115 Z" fill="#005A36"/>
+    <path d="M 75,40 L 115,40 L 115,75 L 75,75 Z" fill="#005A36"/>
+    
+    <!-- Stylized curved figures in cross -->
+    <path d="M 50,25 C 50,25 65,45 65,65 C 65,85 50,105 50,105 C 50,105 85,85 85,65 C 85,45 50,25 50,25 Z" fill="#1B1D1C" />
+    <circle cx="68" cy="35" r="7" fill="#1B1D1C"/>
+    <circle cx="82" cy="72" r="6" fill="#005A36"/>
+  </g>
+
+  <!-- Text Section -->
+  <g id="cks-logo-text" font-family="'Times New Roman', Times, serif">
+    <text x="125" y="70" font-size="52" font-weight="900" fill="#1B1D1C" letter-spacing="-1">CKS</text>
+    <text x="126" y="95" font-size="22" font-weight="bold" fill="#1B1D1C" letter-spacing="1">HOSPITALS</text>
+    <text x="22" y="132" font-size="16" font-weight="bold" fill="#1B1D1C" letter-spacing="1">TRUSTED HEALTH PARTNER</text>
+  </g>
+</svg>

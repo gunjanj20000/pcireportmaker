@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <!-- Outer double circles -->
+  <circle cx="80" cy="80" r="76" fill="none" stroke="#1B1D1C" stroke-width="3"/>
+  <circle cx="80" cy="80" r="70" fill="none" stroke="#1B1D1C" stroke-width="1.5"/>
+  <circle cx="80" cy="80" r="48" fill="none" stroke="#1B1D1C" stroke-width="1.5"/>
+  
+  <!-- Text paths -->
+  <defs>
+    <path id="top-arc" d="M 17,80 A 63,63 0 1,1 143,80" />
+    <path id="bottom-arc" d="M 143,80 A 63,63 0 0,1 17,80" />
+  </defs>
+
+  <text font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#1B1D1C" letter-spacing="1">
+    <textPath href="#top-arc" startOffset="50%" text-anchor="middle">
+      PATIENT SAFETY &amp; QUALITY OF CARE
+    </textPath>
+  </text>
+
+  <text font-family="Arial, sans-serif" font-size="10.5" font-weight="bold" fill="#1B1D1C" letter-spacing="1.5">
+    <textPath href="#bottom-arc" startOffset="50%" text-anchor="middle">
+      * NABH ACCREDITED *
+    </textPath>
+  </text>
+
+  <!-- Center NABH Symbol -->
+  <g transform="translate(48, 48)">
+    <polygon points="32,8 56,54 8,54" fill="none" stroke="#1B1D1C" stroke-width="2.5"/>
+    <circle cx="32" cy="24" r="7" fill="#1B1D1C"/>
+    <rect x="25" y="34" width="14" height="20" fill="#1B1D1C"/>
+    <line x1="18" y1="54" x2="46" y2="54" stroke="#1B1D1C" stroke-width="3"/>
+    <line x1="12" y1="58" x2="52" y2="58" stroke="#1B1D1C" stroke-width="2"/>
+  </g>
+</svg>

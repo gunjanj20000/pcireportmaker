@@ -1,0 +1,761 @@
+/* PCI Report Maker - Responsive & Mobile Card-Style Stylesheet */
+:root {
+  --primary-color: #005a36;
+  --primary-hover: #004227;
+  --primary-light: #e6f2ed;
+  --accent-color: #0284c7;
+  --bg-color: #f3f4f6;
+  --panel-bg: #ffffff;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --border-color: #d1d5db;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App Header Bar */
+.navbar {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.navbar-brand svg {
+  height: 30px;
+  width: auto;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  touch-action: manipulation;
+}
+
+.btn-primary {
+  background-color: #ffffff;
+  color: var(--primary-color);
+}
+.btn-primary:hover {
+  background-color: #f0fdf4;
+}
+
+.btn-accent {
+  background-color: var(--accent-color);
+  color: white;
+}
+.btn-accent:hover {
+  background-color: #0369a1;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: white;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-secondary {
+  background-color: #4b5563;
+  color: white;
+}
+.btn-secondary:hover {
+  background-color: #374151;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+}
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+/* Tab Toggle Switcher (Mobile & iPad) */
+.view-tabs-bar {
+  display: none;
+  background-color: #ffffff;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 54px;
+  z-index: 90;
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-switch-group {
+  display: flex;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 3px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.tab-btn.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Main Container Layout */
+.app-container {
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  flex: 1;
+  max-width: 1850px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Form Panel */
+.form-panel {
+  background-color: var(--panel-bg);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-md);
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Section Cards */
+.section-card {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+  border-bottom: 2px solid var(--primary-light);
+  padding-bottom: 0.45rem;
+}
+
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.step-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+label {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.btn-add-custom {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+.btn-add-custom:hover {
+  color: #0369a1;
+}
+
+select.dropdown-select {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.9rem;
+  border: 1.5px solid #005a36;
+  border-radius: 0.375rem;
+  background-color: #f0fdf4;
+  color: #005a36;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 40px;
+}
+
+select.dropdown-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 90, 54, 0.25);
+}
+
+select.dropdown-select option {
+  background-color: #ffffff;
+  color: #1f2937;
+  font-weight: 500;
+  padding: 6px;
+}
+
+select.dropdown-select option.opt-add-custom {
+  font-weight: bold;
+  color: #0284c7;
+  background-color: #e0f2fe;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease;
+  min-height: 40px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 90, 54, 0.15);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 75px;
+}
+
+/* Document Preview Panel */
+.preview-panel {
+  background-color: #525659;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+  height: calc(100vh - 100px);
+}
+
+/* Paper Sheet Layout (Matches Printed A4 Page 1:1) */
+.paper-sheet {
+  background-color: #ffffff;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 12mm 15mm;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  position: relative;
+  font-family: "Times New Roman", Times, Georgia, serif;
+  color: #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Header inside Performa Sheet */
+.performa-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.performa-header-left {
+  width: 140px;
+  padding-top: 2px;
+}
+
+.performa-header-left img,
+.performa-header-left svg {
+  width: 135px;
+  height: auto;
+}
+
+.performa-header-center {
+  text-align: center;
+  flex: 1;
+  padding: 0 10px;
+}
+
+.performa-header-center h1 {
+  font-size: 20pt;
+  font-weight: bold;
+  font-family: "Times New Roman", Times, serif;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+}
+
+.performa-header-center p {
+  font-size: 8.5pt;
+  margin: 1.5px 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.25;
+}
+
+.performa-header-right {
+  width: 85px;
+  text-align: right;
+}
+
+.performa-header-right img,
+.performa-header-right svg {
+  width: 75px;
+  height: auto;
+}
+
+.performa-divider {
+  border: none;
+  border-top: 1.5px solid #000000;
+  margin: 4px 0 10px 0;
+}
+
+.performa-title {
+  text-align: center;
+  font-size: 12.5pt;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: underline;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* Performa Rows & Entry Fields */
+.performa-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 4px 25px;
+  margin-bottom: 8px;
+  font-size: 10.5pt;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.performa-row {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 5px;
+  font-size: 10pt;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.performa-label {
+  font-weight: bold;
+  min-width: 130px;
+  white-space: nowrap;
+}
+
+.performa-label.short {
+  min-width: 75px;
+}
+
+.performa-value {
+  flex: 1;
+  border-bottom: 1px solid #000000;
+  min-height: 17px;
+  padding-left: 5px;
+  padding-bottom: 1px;
+  font-weight: 500;
+  color: #000000;
+  word-break: break-word;
+}
+
+.performa-section-heading {
+  font-weight: bold;
+  font-size: 10pt;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 6px 0 4px 0;
+  text-transform: uppercase;
+}
+
+.performa-section-heading.underlined {
+  text-decoration: none;
+}
+
+.performa-sub-list {
+  padding-left: 0px;
+}
+
+.performa-sub-row {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 4px;
+  font-size: 10pt;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.performa-sub-label {
+  min-width: 165px;
+}
+
+.performa-sub-label.indent {
+  padding-left: 0px;
+}
+
+/* Footer & Doctors Signatures */
+.performa-footer {
+  margin-top: 15px;
+}
+
+.performa-doctors-row {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin-bottom: 15px;
+  padding: 0 10px;
+}
+
+.doctor-col {
+  flex: 1;
+  font-weight: bold;
+  font-size: 9.5pt;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.performa-bottom-sign {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 9.5pt;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  padding-top: 5px;
+}
+
+.sign-line {
+  border-bottom: 1px solid #000000;
+  display: inline-block;
+  min-width: 180px;
+  height: 16px;
+}
+
+.doc-code {
+  font-size: 8.5pt;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: normal;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  width: 92%;
+  max-width: 650px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.history-item {
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fafafa;
+  margin-bottom: 0.5rem;
+}
+
+.history-item-info h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--primary-color);
+}
+
+.history-item-info p {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ========================================================= */
+/* RESPONSIVE MEDIA QUERIES (iPad, Tablets, Mobile Phones)   */
+/* ========================================================= */
+
+/* iPad & Tablet Landscape (900px - 1180px) */
+@media (max-width: 1180px) {
+  .app-container {
+    grid-template-columns: 460px 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+}
+
+/* iPad Portrait & Mobile (max-width: 900px) */
+@media (max-width: 900px) {
+  .view-tabs-bar {
+    display: block;
+  }
+
+  .app-container {
+    grid-template-columns: 1fr;
+    padding: 0.75rem;
+    gap: 1rem;
+  }
+
+  .form-panel {
+    height: auto;
+    max-height: none;
+    padding: 0.75rem;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .preview-panel {
+    height: auto;
+    max-height: none;
+    padding: 0.75rem;
+    overflow-x: auto;
+  }
+
+  /* Paper sheet scaling for touch screens */
+  .paper-sheet {
+    transform-origin: top center;
+    max-width: 100%;
+  }
+
+  /* Toggle View switching via JavaScript */
+  .app-container.show-editor .preview-panel {
+    display: none !important;
+  }
+  .app-container.show-editor .form-panel {
+    display: flex !important;
+  }
+
+  .app-container.show-preview .form-panel {
+    display: none !important;
+  }
+  .app-container.show-preview .preview-panel {
+    display: flex !important;
+  }
+}
+
+/* Mobile Phones (max-width: 600px) - CARD STYLE LAYOUT */
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .navbar-brand span {
+    font-size: 1rem;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: space-between;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .btn {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  /* Mobile Card Style */
+  .section-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    padding: 1rem 0.85rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select,
+  textarea,
+  select.dropdown-select {
+    font-size: 16px; /* Prevents auto-zoom on iOS Safari */
+    border-radius: 8px;
+    min-height: 44px; /* Finger touch friendly target */
+  }
+
+  /* Paper sheet scaling for small mobile screens */
+  .paper-sheet {
+    width: 100%;
+    min-height: auto;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .performa-header-left {
+    width: 90px;
+  }
+  .performa-header-left img,
+  .performa-header-left svg {
+    width: 85px;
+  }
+
+  .performa-header-center h1 {
+    font-size: 14pt;
+  }
+  .performa-header-center p {
+    font-size: 7pt;
+  }
+
+  .performa-header-right {
+    width: 55px;
+  }
+  .performa-header-right img,
+  .performa-header-right svg {
+    width: 50px;
+  }
+
+  .performa-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
