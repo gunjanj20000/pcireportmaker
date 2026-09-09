@@ -1,26 +1,116 @@
 /* PCI Report Maker - Strict Single-Page A4 Print & PDF Stylesheet */
 
-/* Class applied during Mobile PDF Generation to lock 1:1 A4 sheet geometry */
+/* Class applied during Mobile/Desktop PDF Generation to lock 1:1 A4 sheet geometry & 2-column desktop layout */
 .paper-sheet.force-single-page-export {
   width: 210mm !important;
+  min-width: 210mm !important;
+  max-width: 210mm !important;
   height: 295mm !important;
   max-height: 295mm !important;
   padding: 10mm 14mm !important;
-  margin: 0 auto !important;
+  margin: 0 !important;
   box-shadow: none !important;
   overflow: hidden !important;
   box-sizing: border-box !important;
   font-family: "Times New Roman", Times, Georgia, serif !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  transform: none !important;
+}
+
+.paper-sheet.force-single-page-export .performa-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  margin-bottom: 6px !important;
+}
+
+.paper-sheet.force-single-page-export .performa-header-left {
+  width: 140px !important;
+  padding-top: 2px !important;
+}
+
+.paper-sheet.force-single-page-export .performa-header-left img,
+.paper-sheet.force-single-page-export .performa-header-left svg {
+  width: 135px !important;
+  height: auto !important;
+}
+
+.paper-sheet.force-single-page-export .performa-header-center {
+  text-align: center !important;
+  flex: 1 !important;
+  padding: 0 10px !important;
 }
 
 .paper-sheet.force-single-page-export .performa-header-center h1 {
   font-size: 19pt !important;
+  font-weight: bold !important;
+  font-family: "Times New Roman", Times, serif !important;
+  margin: 0 !important;
+  line-height: 1.1 !important;
 }
 
-.paper-sheet.force-single-page-export .performa-grid,
+.paper-sheet.force-single-page-export .performa-header-center p {
+  font-size: 8.5pt !important;
+  margin: 1.5px 0 !important;
+  font-family: Arial, sans-serif !important;
+}
+
+.paper-sheet.force-single-page-export .performa-header-right {
+  width: 85px !important;
+  text-align: right !important;
+}
+
+.paper-sheet.force-single-page-export .performa-header-right img,
+.paper-sheet.force-single-page-export .performa-header-right svg {
+  width: 75px !important;
+  height: auto !important;
+}
+
+.paper-sheet.force-single-page-export .performa-grid {
+  display: grid !important;
+  grid-template-columns: 3fr 2fr !important;
+  gap: 4px 25px !important;
+  margin-bottom: 8px !important;
+  font-size: 10pt !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
 .paper-sheet.force-single-page-export .performa-row,
 .paper-sheet.force-single-page-export .performa-sub-row {
+  display: flex !important;
+  align-items: baseline !important;
+  margin-bottom: 5px !important;
   font-size: 10pt !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.paper-sheet.force-single-page-export .performa-label {
+  font-weight: bold !important;
+  min-width: 130px !important;
+  white-space: nowrap !important;
+}
+
+.paper-sheet.force-single-page-export .performa-label.short {
+  min-width: 75px !important;
+}
+
+.paper-sheet.force-single-page-export .performa-sub-label {
+  min-width: 165px !important;
+}
+
+.paper-sheet.force-single-page-export .performa-value {
+  flex: 1 !important;
+  border-bottom: 1px solid #000000 !important;
+  min-height: 17px !important;
+  padding-left: 5px !important;
+  word-break: break-word !important;
+}
+
+.paper-sheet.force-single-page-export .performa-doctors-row,
+.paper-sheet.force-single-page-export .performa-bottom-sign {
+  display: flex !important;
+  justify-content: space-between !important;
 }
 
 @media print {
