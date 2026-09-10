@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pci-report-v2';
+const CACHE_NAME = 'pci-report-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

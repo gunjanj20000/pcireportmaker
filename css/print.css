@@ -101,7 +101,7 @@
 
 .paper-sheet.force-single-page-export .performa-value {
   flex: 1 !important;
-  border-bottom: 1px solid #000000 !important;
+  border-bottom: none !important;
   min-height: 17px !important;
   padding-left: 5px !important;
   word-break: break-word !important;
@@ -184,7 +184,6 @@
     color: #000000 !important;
   }
 
-  .performa-value,
   .sign-line {
     border-bottom: 1px solid #000000 !important;
   }
